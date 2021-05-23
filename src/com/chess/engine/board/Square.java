@@ -18,7 +18,7 @@ public abstract class Square {
     private static Map<Integer, EmptySquare> createAllPossibleEmptySquare() {
         final Map<Integer, EmptySquare> emptySquareMap = new HashMap<>();
 
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < Utilities.NUM_SQUARES; i++) {
             emptySquareMap.put(i, new EmptySquare(i));
         }
         // immutable map of all possible empty square
@@ -26,7 +26,7 @@ public abstract class Square {
         return ImmutableMap.copyOf(emptySquareMap);
     }
 
-    Square(int squarePosition) {
+    private Square(final int squarePosition) {
         this.squarePosition = squarePosition;
     }
 

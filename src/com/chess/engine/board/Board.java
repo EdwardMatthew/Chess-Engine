@@ -5,4 +5,6 @@ public class Board {
     public Square getSquare(final int squarePosition) {
         return null;
     }
+
+
 }
