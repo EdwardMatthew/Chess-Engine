@@ -29,17 +29,17 @@ public class Knight extends Piece {
         final List<Move> legalMoves = new ArrayList<>();
 
         // looping through all of the possible legal moves
-        for (final int currentPossible : POSSIBLE_LEGAL_MOVES) {
-            possibleDestinationPosition = this.piecePosition + currentPossible;
+        for (final int PossibleDestinationOffset : POSSIBLE_LEGAL_MOVES) {
+            possibleDestinationPosition = this.piecePosition + PossibleDestinationOffset;
 
             // move is possible
             if (Utilities.isValidSquarePosition(possibleDestinationPosition)) {
 
                 // skip the problematic position
-                if (firstColumn(this.piecePosition, currentPossible) ||
-                    secondColumn(this.piecePosition, currentPossible) ||
-                    seventhColumn(this.piecePosition, currentPossible) ||
-                    eightColumn(this.piecePosition, currentPossible)) {
+                if (firstColumn(this.piecePosition, PossibleDestinationOffset) ||
+                    secondColumn(this.piecePosition, PossibleDestinationOffset) ||
+                    seventhColumn(this.piecePosition, PossibleDestinationOffset) ||
+                    eightColumn(this.piecePosition, PossibleDestinationOffset)) {
                     continue;
                 }
 
