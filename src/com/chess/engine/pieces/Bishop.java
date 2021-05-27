@@ -17,18 +17,17 @@ public class Bishop extends Piece {
 
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -7, 7, 9};
 
-    Bishop(final int piecePosition, final Color pieceColor) {
+    public Bishop(final int piecePosition, final Color pieceColor) {
         super(piecePosition, pieceColor);
     }
 
     @Override
     public Collection<Move> findLegalMove(final Board board) {
 
-        int possibleDestinationPosition;
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES_DIRECTION) {
-            possibleDestinationPosition = this.piecePosition;
+            int possibleDestinationPosition = this.piecePosition;
 
             // looping to move the bishop to one of the four possible diagonals
             // continue loop while tile is still valid
@@ -54,7 +53,8 @@ public class Bishop extends Piece {
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
+                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                    pieceAtDestination));
                         }
                     }
                     break;
@@ -63,6 +63,10 @@ public class Bishop extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override public String toString() {
+        return pieceType.BISHOP.toString();
     }
 
     // check where algorithm breaks

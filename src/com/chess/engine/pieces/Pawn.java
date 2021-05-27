@@ -10,34 +10,72 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.chess.engine.board.Move.*;
+
 public class Pawn extends Piece {
+    // 7 and 9 is due to the pawn capturing diagonally
+    private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {7, 8, 9, 16};
 
-    private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {8};
-
-    Pawn(final int piecePosition, final Color pieceColor) {
+    public Pawn(final int piecePosition, final Color pieceColor) {
         super(piecePosition, pieceColor);
     }
 
     @Override
     public Collection<Move> findLegalMove(final Board board) {
 
-        int possibleDestinationPosition;
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES_DIRECTION) {
-            possibleDestinationPosition = this.piecePosition + (this.getPieceColor().getDirection() *
+            final int possibleDestinationPosition = this.piecePosition + (this.pieceColor.getDirection() *
                     possibleDestinationOffset);
 
             if (!Utilities.isValidSquarePosition(possibleDestinationPosition)) {
                 continue;
             }
 
-            if (possibleDestinationOffset == 8 && board.getSquare(possibleDestinationPosition).isSquareFilled()) {
-                // replace with PawnMove later
-                legalMoves.add(new Move.BigMove(board, this, possibleDestinationPosition));
+            if (possibleDestinationOffset == 8 && !board.getSquare(possibleDestinationPosition).isSquareFilled()) {
+                // replace with PawnMove later to deal with promotions
+                legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
+            } else if (possibleDestinationOffset == 16 && this.isFirstMove() &&
+                    (Utilities.SECOND_ROW[this.piecePosition] && this.pieceColor.isBlack()) ||
+                    (Utilities.SEVENTH_ROW[this.piecePosition] && this.pieceColor.isWhite())) {
+                // check to see move unobstructed
+                final int behindPossibleDestinationPosition = this.piecePosition +
+                        (this.pieceColor.getDirection() * 8);
+                if (!board.getSquare(behindPossibleDestinationPosition).isSquareFilled() &&
+                        !board.getSquare(possibleDestinationPosition).isSquareFilled()) {
+                    legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
+                }
+                // capturing diagonally with the edge cases
+            } else if (possibleDestinationOffset == 7 &&
+                    !((Utilities.EIGHT_COLUMN[this.piecePosition] && this.pieceColor.isWhite() ||
+                            (Utilities.FIRST_COLUMN[this.piecePosition] && this.pieceColor.isBlack())))) {
+                if (board.getSquare(possibleDestinationPosition).isSquareFilled()) {
+                    final Piece pieceAtDestination = board.getSquare(possibleDestinationPosition).getPiece();
+                    if (this.pieceColor != pieceAtDestination.getPieceColor()) {
+                        legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                pieceAtDestination));
+                    }
+                }
+
+            } else if (possibleDestinationOffset == 9 &&
+                    !((Utilities.FIRST_COLUMN[this.piecePosition] && this.pieceColor.isBlack() ||
+                            (Utilities.EIGHT_COLUMN[this.piecePosition] && this.pieceColor.isWhite())))) {
+                if (board.getSquare(possibleDestinationPosition).isSquareFilled()) {
+                    final Piece pieceAtDestination = board.getSquare(possibleDestinationPosition).getPiece();
+                    if (this.pieceColor != pieceAtDestination.getPieceColor()) {
+                        legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                pieceAtDestination));
+                    }
+                }
             }
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.PAWN.toString();
     }
 }

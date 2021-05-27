@@ -16,30 +16,29 @@ import static com.chess.engine.board.Move.*;
 public class Knight extends Piece {
 
     // offset for the maximum possible legal moves of the knight
-    private final static int[] POSSIBLE_LEGAL_MOVES = {-17, -15, -10, -6, 6, 10, 15, 17};
+    private final static int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-17, -15, -10, -6, 6, 10, 15, 17};
 
-    Knight(final int piecePosition, final Color pieceColor) {
+    public Knight(final int piecePosition, final Color pieceColor) {
         super(piecePosition, pieceColor);
     }
 
     @Override
     public Collection<Move> findLegalMove(final Board board) {
 
-        int possibleDestinationPosition;
         final List<Move> legalMoves = new ArrayList<>();
 
         // looping through all of the possible legal moves
-        for (final int PossibleDestinationOffset : POSSIBLE_LEGAL_MOVES) {
-            possibleDestinationPosition = this.piecePosition + PossibleDestinationOffset;
+        for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES_DIRECTION) {
+            final int possibleDestinationPosition = this.piecePosition + possibleDestinationOffset;
 
             // move is possible
             if (Utilities.isValidSquarePosition(possibleDestinationPosition)) {
 
-                // skip the problematic position
-                if (firstColumn(this.piecePosition, PossibleDestinationOffset) ||
-                    secondColumn(this.piecePosition, PossibleDestinationOffset) ||
-                    seventhColumn(this.piecePosition, PossibleDestinationOffset) ||
-                    eightColumn(this.piecePosition, PossibleDestinationOffset)) {
+                // skip the position where the rule breaks
+                if (firstColumn(this.piecePosition, possibleDestinationOffset) ||
+                    secondColumn(this.piecePosition, possibleDestinationOffset) ||
+                    seventhColumn(this.piecePosition, possibleDestinationOffset) ||
+                    eightColumn(this.piecePosition, possibleDestinationOffset)) {
                     continue;
                 }
 
@@ -54,12 +53,18 @@ public class Knight extends Piece {
 
                     // checking if the piece is capturing an enemy piece
                     if (this.pieceColor != pieceColor) {
-                        legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
+                        legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                pieceAtDestination));
                     }
                 }
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.KNIGHT.toString();
     }
 
     // check where the algorithm breaks

@@ -30,12 +30,23 @@ public abstract class Square {
         this.squarePosition = squarePosition;
     }
 
+    public static Square createSquare(final int squarePosition, Piece piece) {
+        // if piece is not null create a new filled square, else get the empty square from the cache
+        return piece != null ? new filledSquare(squarePosition, piece) : EMPTY_SQUARE_CACHE.get(squarePosition);
+    }
+
     public abstract boolean isSquareFilled();
     public abstract Piece getPiece();
 
     public static final class EmptySquare extends Square{
         private EmptySquare(int position) {
             super(position);
+        }
+
+        // if square empty print out hyphen
+        @Override
+        public String toString() {
+            return "-";
         }
 
         // initial square is always initialized as empty
@@ -59,6 +70,15 @@ public abstract class Square {
         private filledSquare(int squarePosition, Piece pieceOnSquare) {
             super(squarePosition);
             this.pieceOnSquare = pieceOnSquare;
+        }
+
+        // when square is filled print out the piece
+        // black is lowercase
+        // white is uppercase
+        @Override
+        public String toString() {
+            return getPiece().getPieceColor().isBlack() ? getPiece().toString().toLowerCase():
+                    getPiece().toString();
         }
 
         // the override method for the filled square

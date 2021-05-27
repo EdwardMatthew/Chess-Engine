@@ -11,22 +11,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.chess.engine.board.Move.*;
+
 public class Queen extends Piece {
 
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    Queen(final int piecePosition, final Color pieceColor) {
+    public Queen(final int piecePosition, final Color pieceColor) {
         super(piecePosition, pieceColor);
     }
 
     @Override
     public Collection<Move> findLegalMove(final Board board) {
 
-        int possibleDestinationPosition;
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES_DIRECTION) {
-            possibleDestinationPosition = this.piecePosition + possibleDestinationOffset;
+            int possibleDestinationPosition = this.piecePosition + possibleDestinationOffset;
 
             // looping to move the bishop to one of the four possible diagonals
             // continue loop while tile is still valid
@@ -45,14 +46,15 @@ public class Queen extends Piece {
 
                     // if the destination square is not occupied by an enemy piece
                     if (!possibleDestinationSquare.isSquareFilled()) {
-                        legalMoves.add(new Move.BigMove(board, this, possibleDestinationPosition));
+                        legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
                     } else {
                         final Piece pieceAtDestination = possibleDestinationSquare.getPiece();
                         final Color pieceColor = pieceAtDestination.getPieceColor();
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new Move.BigMove(board, this, possibleDestinationPosition));
+                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                    pieceAtDestination));
                         }
                     }
                     break;
@@ -61,6 +63,11 @@ public class Queen extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.QUEEN.toString();
     }
 
     // check where algorithm breaks

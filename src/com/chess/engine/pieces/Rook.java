@@ -17,7 +17,7 @@ public class Rook extends Piece {
 
     private static final int[] POSSIBLE_LEGAL_MOVES = {-8, -1, 1, 8};
 
-    Rook(final int piecePosition, final Color pieceColor) {
+    public Rook(final int piecePosition, final Color pieceColor) {
         super(piecePosition, pieceColor);
     }
 
@@ -52,7 +52,8 @@ public class Rook extends Piece {
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
+                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                                    pieceAtDestination));
                         }
                     }
                     break;
@@ -60,6 +61,11 @@ public class Rook extends Piece {
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.ROOK.toString();
     }
 
     // check where the algorithm breaks
