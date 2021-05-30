@@ -10,8 +10,10 @@ public abstract class Piece {
     protected final int piecePosition;
     protected final Color pieceColor;
     protected final boolean isFirstMove;
+    protected final PieceType pieceType;
 
-    Piece(final int piecePosition, final Color pieceColor) {
+    Piece(final PieceType pieceType, final int piecePosition, final Color pieceColor) {
+        this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceColor = pieceColor;
         // continue this later
@@ -35,24 +37,60 @@ public abstract class Piece {
     // calculating legal moves
     public abstract Collection<Move> findLegalMove(final Board board);
 
-    public enum pieceType {
+    public PieceType getPieceType() {
+        return this.pieceType;
+    }
 
-        PAWN("P"),
-        KNIGHT("N"),
-        BISHOP("B"),
-        ROOK("R"),
-        QUEEN("Q"),
-        KING("K");
+    public enum PieceType {
+        BISHOP("B") {
+            @Override
+            public boolean isKing() {
+                return false;
+            }
+        },
+        KING("K") {
+            @Override
+            public boolean isKing() {
+                return true;
+            }
+        },
+        KNIGHT("N") {
+            @Override
+            public boolean isKing() {
+                return false;
+            }
+        },
+        PAWN("P") {
+            @Override
+            public boolean isKing() {
+                return false;
+            }
+        },
+        QUEEN("Q") {
+            @Override
+            public boolean isKing() {
+                return false;
+            }
+        },
+        ROOK("R") {
+            @Override
+            public boolean isKing() {
+                return false;
+            }
+        };
 
 
         private String pieceName;
 
-        pieceType(final String pieceName) {
+        PieceType(final String pieceName) {
             this.pieceName = pieceName;
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return this.pieceName;
         }
+
+        public abstract boolean isKing();
     }
 }

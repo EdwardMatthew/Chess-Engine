@@ -18,7 +18,7 @@ public class Queen extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -8, -7, -1, 1, 7, 8, 9};
 
     public Queen(final int piecePosition, final Color pieceColor) {
-        super(piecePosition, pieceColor);
+        super(PieceType.QUEEN, piecePosition, pieceColor);
     }
 
     @Override

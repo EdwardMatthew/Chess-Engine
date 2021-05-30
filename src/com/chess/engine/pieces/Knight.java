@@ -19,7 +19,7 @@ public class Knight extends Piece {
     private final static int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-17, -15, -10, -6, 6, 10, 15, 17};
 
     public Knight(final int piecePosition, final Color pieceColor) {
-        super(piecePosition, pieceColor);
+        super(PieceType.KNIGHT, piecePosition, pieceColor);
     }
 
     @Override

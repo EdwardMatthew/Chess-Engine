@@ -18,7 +18,7 @@ public class Rook extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES = {-8, -1, 1, 8};
 
     public Rook(final int piecePosition, final Color pieceColor) {
-        super(piecePosition, pieceColor);
+        super(PieceType.ROOK, piecePosition, pieceColor);
     }
 
     @Override

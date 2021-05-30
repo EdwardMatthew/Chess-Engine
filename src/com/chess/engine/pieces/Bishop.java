@@ -18,7 +18,7 @@ public class Bishop extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -7, 7, 9};
 
     public Bishop(final int piecePosition, final Color pieceColor) {
-        super(piecePosition, pieceColor);
+        super(PieceType.BISHOP, piecePosition, pieceColor);
     }
 
     @Override
