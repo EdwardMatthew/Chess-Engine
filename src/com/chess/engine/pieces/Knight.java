@@ -63,8 +63,13 @@ public class Knight extends Piece {
     }
 
     @Override
+    public Knight movePiece(Move move) {
+        return new Knight(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+    }
+
+    @Override
     public String toString() {
-        return pieceType.KNIGHT.toString();
+        return pieceType.toString();
     }
 
     // check where the algorithm breaks

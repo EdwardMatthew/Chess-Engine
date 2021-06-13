@@ -64,8 +64,13 @@ public class Rook extends Piece {
     }
 
     @Override
+    public Rook movePiece(Move move) {
+        return new Rook(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+    }
+
+    @Override
     public String toString() {
-        return pieceType.ROOK.toString();
+        return pieceType.toString();
     }
 
     // check where the algorithm breaks

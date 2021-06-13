@@ -58,8 +58,13 @@ public class King extends Piece {
     }
 
     @Override
+    public King movePiece(Move move) {
+        return new King(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+    }
+
+    @Override
     public String toString() {
-        return pieceType.KING.toString();
+        return pieceType.toString();
     }
 
     private static boolean firstColumn(final int currentPosition, final int possibleOffset) {

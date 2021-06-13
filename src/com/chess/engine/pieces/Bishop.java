@@ -65,8 +65,13 @@ public class Bishop extends Piece {
         return ImmutableList.copyOf(legalMoves);
     }
 
+    @Override
+    public Piece movePiece(Move move) {
+        return new Bishop(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+    }
+
     @Override public String toString() {
-        return pieceType.BISHOP.toString();
+        return pieceType.toString();
     }
 
     // check where algorithm breaks

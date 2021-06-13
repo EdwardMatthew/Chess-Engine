@@ -66,8 +66,13 @@ public class Queen extends Piece {
     }
 
     @Override
+    public Queen movePiece(Move move) {
+        return new Queen(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+    }
+
+    @Override
     public String toString() {
-        return pieceType.QUEEN.toString();
+        return pieceType.toString();
     }
 
     // check where algorithm breaks
