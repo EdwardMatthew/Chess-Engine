@@ -8,8 +8,14 @@ public class Utilities {
     public static final boolean[] EIGHT_COLUMN = initColumn(7);
 
     // check for pawn spawn tile
-    public static final boolean[] SECOND_ROW = initRows(8);
-    public static final boolean[] SEVENTH_ROW = initRows(48);
+    public static final boolean[] EIGHT_RANK = initRows(0);
+    public static final boolean[] SEVENTH_RANK = initRows(8);
+    public static final boolean[] SIXTH_RANK = initRows(16);
+    public static final boolean[] FIFTH_RANK = initRows(24);
+    public static final boolean[] FOURTH_RANK = initRows(32);
+    public static final boolean[] THIRD_RANK = initRows(40);
+    public static final boolean[] SECOND_RANK = initRows(48);
+    public static final boolean[] FIRST_RANK = initRows(56);
 
     // constants to replace magic numbers
     public static final int NUM_SQUARES = 64;
