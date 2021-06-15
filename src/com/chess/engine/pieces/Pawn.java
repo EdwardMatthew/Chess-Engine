@@ -37,8 +37,8 @@ public class Pawn extends Piece {
                 // replace with PawnMove later to deal with promotions
                 legalMoves.add(new BigMove(board, this, possibleDestinationPosition));
             } else if (possibleDestinationOffset == 16 && this.isFirstMove() &&
-                    (Utilities.SECOND_ROW[this.piecePosition] && this.pieceColor.isBlack()) ||
-                    (Utilities.SEVENTH_ROW[this.piecePosition] && this.pieceColor.isWhite())) {
+                    (Utilities.SEVENTH_RANK[this.piecePosition] && this.pieceColor.isBlack()) ||
+                    (Utilities.SECOND_RANK[this.piecePosition] && this.pieceColor.isWhite())) {
                 // check to see move unobstructed
                 final int behindPossibleDestinationPosition = this.piecePosition +
                         (this.pieceColor.getDirection() * 8);
