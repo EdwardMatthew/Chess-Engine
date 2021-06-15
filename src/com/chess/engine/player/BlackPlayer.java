@@ -5,6 +5,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Square;
 import com.chess.engine.pieces.Piece;
+import com.chess.engine.pieces.Rook;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ public class BlackPlayer extends Player {
     }
 
     @Override
-    protected Collection<Move> calculateKingCastling(Collection<Move> playerLegals, Collection<Move> opponentLegals) {
+    protected Collection<Move> calculateKingCastling(final Collection<Move> playerLegals,
+                                                     final Collection<Move> opponentLegals) {
         final List<Move> kingCastles = new ArrayList<>();
 
         if (this.playerKing.isFirstMove() && !this.isInCheck()) {
@@ -49,7 +51,8 @@ public class BlackPlayer extends Player {
                             Player.findAttackOnSquare(6, opponentLegals).isEmpty() &&
                             rookSquare.getPiece().getPieceType().isRook()) {
                         // add king castle move later
-                        kingCastles.add(null);
+                        kingCastles.add(new Move.ShortCastleMove(this.board, this.playerKing, 6,
+                                       (Rook)rookSquare.getPiece(), rookSquare.getSquarePosition(), 5));
                     }
                 }
             }
@@ -68,7 +71,8 @@ public class BlackPlayer extends Player {
                             Player.findAttackOnSquare(2, opponentLegals).isEmpty() &&
                             rookSquare.getPiece().getPieceType().isRook()) {
                         // implement long castle move later
-                        kingCastles.add(null);
+                        kingCastles.add(new Move.LongCastleMove(this.board, this.playerKing, 2,
+                                       (Rook)rookSquare.getPiece(), rookSquare.getSquarePosition(), 3));
                     }
                 }
             }

@@ -6,6 +6,7 @@ import com.chess.engine.board.Move;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Piece;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,8 @@ public abstract class Player {
            final Collection<Move> opposingMoves) {
         this.board = board;
         this.playerKing = establishKing();
-        this.legalMoves = legalMoves;
+        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves,
+                          calculateKingCastling(legalMoves, opposingMoves)));
         // does the opponent move put the current player in check
         // passing the kings position and the opposing moves
         // if opposing move overlaps with the current player's king position, king isCheck
