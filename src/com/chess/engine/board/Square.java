@@ -37,6 +37,9 @@ public abstract class Square {
 
     public abstract boolean isSquareFilled();
     public abstract Piece getPiece();
+    public int getSquarePosition() {
+        return this.squarePosition;
+    }
 
     public static final class EmptySquare extends Square{
         private EmptySquare(int position) {
