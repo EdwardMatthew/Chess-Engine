@@ -51,11 +51,6 @@ public abstract class Player {
         throw new RuntimeException("Board not valid");
     }
 
-    // method for calculating if move is legal
-    public boolean isMoveLegal(final Move move) {
-        return this.legalMoves.contains(move);
-    }
-
     // checking game ending conditions
     public boolean isInCheck() {
         return this.inCheck;
@@ -98,6 +93,10 @@ public abstract class Player {
             return new MoveTransition(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
         }
         return new MoveTransition(transitionBoard, move, MoveStatus.DONE);
+    }
+
+    private boolean isMoveLegal(Move move) {
+        return this.legalMoves.contains(move);
     }
 
     public Collection<Move> getLegalMoves() {

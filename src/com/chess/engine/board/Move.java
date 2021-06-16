@@ -13,8 +13,6 @@ public abstract class Move {
     final Piece movedPiece;
     final int destinationPosition;
 
-    public static final Move INVALID_MOVE = new InvalidMove();
-
     private Move(final Board board, final Piece movedPiece,final int destinationPosition) {
         this.board = board;
         this.movedPiece = movedPiece;
@@ -26,6 +24,7 @@ public abstract class Move {
         final int prime = 31;
         int result = 1;
 
+        result = prime * result + this.movedPiece.hashCode();
         result = prime * result + this.movedPiece.getPiecePosition();
         result = prime * result + this.destinationPosition;
         return result;
@@ -41,7 +40,11 @@ public abstract class Move {
         final Move otherMove = (Move) other;
         return getCurrentPosition() == otherMove.getCurrentPosition() &&
                 getDestinationPosition() == otherMove.getDestinationPosition() &&
-                getMovedPiece() == otherMove.getMovedPiece();
+                getMovedPiece().equals(otherMove.getMovedPiece());
+    }
+
+    public Board getBoard() {
+        return this.board;
     }
 
     public int getCurrentPosition() {
@@ -53,7 +56,7 @@ public abstract class Move {
     }
 
     public Piece getMovedPiece() {
-        return movedPiece;
+        return this.movedPiece;
     }
 
     public boolean isCapture() {
@@ -263,14 +266,20 @@ public abstract class Move {
 
     // for convenience
     public static class MoveFactory {
+        private static final Move INVALID_MOVE = new InvalidMove();
+
         private MoveFactory() {
             throw new RuntimeException("Class not instantiable");
         }
 
+        public static Move getInvalidMove() {
+            return INVALID_MOVE;
+        }
+
         public static Move createMove(final Board board, final int currentPosition, final int destinationPosition) {
             for (final Move move : board.getAllLegalMoves()) {
-                if(move.getCurrentPosition() == currentPosition && move.getDestinationPosition()
-                        == destinationPosition) {
+                if (move.getCurrentPosition() == currentPosition &&
+                    move.getDestinationPosition() == destinationPosition) {
                     return move;
                 }
             }

@@ -42,6 +42,7 @@ public class Board {
     public Player blackPlayer() {
         return this.blackPlayer;
     }
+
     public Player currentPlayer() {
         return this.currentPlayer;
     }

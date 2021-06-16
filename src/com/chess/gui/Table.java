@@ -24,12 +24,12 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 public class Table {
     private final JFrame gameWindow;
     private final BoardPanel boardPanel;
+    private Board chessBoard;
 
     private Square sourceSquare;
     private Square destinationSquare;
     private Piece humanPiece;
 
-    private final Board chessBoard;
     private final Color lightSquare = new Color(227,193,111);
     private final Color darkSquare = new Color(184, 139, 74);
 
@@ -87,6 +87,16 @@ public class Table {
             setPreferredSize(BOARD_PANEL_DIMENSION);
             validate();
         }
+
+        public void drawBoard(final Board board) {
+            removeAll();
+            for (final SquarePanel squarePanel : boardSquares) {
+                squarePanel.drawSquare(board);
+                add(squarePanel);
+            }
+            validate();
+            repaint();
+        }
     }
 
     // making the gui for the squares
@@ -102,18 +112,13 @@ public class Table {
 
             addMouseListener(new MouseListener() {
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    // first click
-                    // cancel picked up piece
-                    if (isRightMouseButton(e)) {
-                        // sourceSquare null == user has not selected piece
-                        // assign piece to human piece
-
+                public void mouseClicked(final MouseEvent event) {
+                    if (isRightMouseButton(event)) {
                         sourceSquare = null;
                         destinationSquare = null;
                         humanPiece = null;
-                    } else if (isLeftMouseButton(e)) {
-                        if (sourceSquare == null) {
+                    } else if (isLeftMouseButton(event)) {
+                        if(sourceSquare == null) {
                             sourceSquare = chessBoard.getSquare(squareId);
                             humanPiece = sourceSquare.getPiece();
                             if (humanPiece == null) {
@@ -121,7 +126,9 @@ public class Table {
                             }
                         } else {
                             destinationSquare = chessBoard.getSquare(squareId);
-                            final Move move = null;
+                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceSquare.getSquarePosition(),
+                                    destinationSquare.getSquarePosition());
+                            final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                         }
                     }
                 }
@@ -180,6 +187,13 @@ public class Table {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public void drawSquare(final Board board) {
+            setSquareColor();
+            setChessPiece(board);
+            validate();
+            repaint();
         }
     }
 }

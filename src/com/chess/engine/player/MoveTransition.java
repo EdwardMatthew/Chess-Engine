@@ -6,7 +6,6 @@ import com.chess.engine.board.Move;
 public class MoveTransition {
     private final Board transitionBoard;
     private final Move move;
-    // checking if king is in danger when moving
     private final MoveStatus moveStatus;
 
     public MoveTransition(final Board transitionBoard, final Move move, final MoveStatus moveStatus) {
@@ -18,4 +17,9 @@ public class MoveTransition {
     public MoveStatus getMoveStatus() {
         return this.moveStatus;
     }
+
+    public Board getTransitionBoard() {
+        return this.transitionBoard;
+    }
+
 }
