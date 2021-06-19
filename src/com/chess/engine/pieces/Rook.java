@@ -18,7 +18,11 @@ public class Rook extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES = {-8, -1, 1, 8};
 
     public Rook(final int piecePosition, final Color pieceColor) {
-        super(PieceType.ROOK, piecePosition, pieceColor);
+        super(PieceType.ROOK, piecePosition, pieceColor, true);
+    }
+
+    public Rook(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+        super(PieceType.ROOK, piecePosition, pieceColor, isFirstMove);
     }
 
     @Override
@@ -52,11 +56,11 @@ public class Rook extends Piece {
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                            legalMoves.add(new MajorCapturingMove(board, this, possibleDestinationPosition,
                                     pieceAtDestination));
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }

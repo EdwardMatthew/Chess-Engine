@@ -10,7 +10,7 @@ import com.google.common.collect.Iterables;
 
 import java.util.*;
 
-public class Board {
+public final class Board {
 
     private final List<Square> gameBoard;
     private final Collection<Piece> whitePieces;
@@ -19,11 +19,13 @@ public class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
 
+    private final Pawn enPassantPawn;
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Color.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Color.BLACK);
+        this.enPassantPawn = builder.enPassantPawn;
 
         // move collection for both white and black pieces
         final Collection<Move> whiteLegalMoves = findLegalMoves(this.whitePieces);
@@ -45,6 +47,10 @@ public class Board {
 
     public Player currentPlayer() {
         return this.currentPlayer;
+    }
+
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
     }
 
     @Override

@@ -18,7 +18,11 @@ public class Bishop extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -7, 7, 9};
 
     public Bishop(final int piecePosition, final Color pieceColor) {
-        super(PieceType.BISHOP, piecePosition, pieceColor);
+        super(PieceType.BISHOP, piecePosition, pieceColor, true);
+    }
+
+    public Bishop(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+        super(PieceType.BISHOP, piecePosition, pieceColor, isFirstMove);
     }
 
     @Override
@@ -34,8 +38,8 @@ public class Bishop extends Piece {
             // stop loop when tile is not valid anymore
             while (Utilities.isValidSquarePosition(possibleDestinationPosition)) {
                 // break the loop where the algorithm breaks
-                if (firstColumn(this.piecePosition, possibleDestinationOffset) ||
-                    eightColumn(this.piecePosition, possibleDestinationOffset)) {
+                if (firstColumn(possibleDestinationPosition, possibleDestinationOffset) ||
+                    eightColumn(possibleDestinationPosition, possibleDestinationOffset)) {
                     break;
                 }
 
@@ -53,11 +57,11 @@ public class Bishop extends Piece {
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                            legalMoves.add(new MajorCapturingMove(board, this, possibleDestinationPosition,
                                     pieceAtDestination));
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }

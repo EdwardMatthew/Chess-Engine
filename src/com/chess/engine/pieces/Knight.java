@@ -19,7 +19,11 @@ public class Knight extends Piece {
     private final static int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-17, -15, -10, -6, 6, 10, 15, 17};
 
     public Knight(final int piecePosition, final Color pieceColor) {
-        super(PieceType.KNIGHT, piecePosition, pieceColor);
+        super(PieceType.KNIGHT, piecePosition, pieceColor, true);
+    }
+
+    public Knight(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+        super(PieceType.KNIGHT, piecePosition, pieceColor, isFirstMove);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class Knight extends Piece {
 
                     // checking if the piece is capturing an enemy piece
                     if (this.pieceColor != pieceColor) {
-                        legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                        legalMoves.add(new MajorCapturingMove(board, this, possibleDestinationPosition,
                                 pieceAtDestination));
                     }
                 }

@@ -18,7 +18,11 @@ public class King extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -8, -7, -1, 1, 7, 8, 9};
 
     public King(final int piecePosition, final Color pieceColor) {
-        super(PieceType.KING, piecePosition, pieceColor);
+        super(PieceType.KING, piecePosition, pieceColor, true);
+    }
+
+    public King(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+        super(PieceType.KING, piecePosition, pieceColor, isFirstMove);
     }
 
     @Override
@@ -47,7 +51,7 @@ public class King extends Piece {
                     final Piece pieceAtDestination = possibleDestinationSquare.getPiece();
                     final Color pieceColor = pieceAtDestination.getPieceColor();
                     if (this.pieceColor != pieceColor) {
-                        legalMoves.add(new CapturingMove(board,this, possibleDestinationPosition,
+                        legalMoves.add(new MajorCapturingMove(board,this, possibleDestinationPosition,
                                 pieceAtDestination));
                     }
                 }

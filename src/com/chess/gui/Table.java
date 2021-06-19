@@ -6,16 +6,21 @@ import com.chess.engine.board.Square;
 import com.chess.engine.board.Utilities;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveTransition;
+import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
@@ -23,12 +28,18 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Table {
     private final JFrame gameWindow;
+    private final GameHistory gameHistory;
+    private final TakenPieces takenPieces;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
     private Board chessBoard;
 
     private Square sourceSquare;
     private Square destinationSquare;
     private Piece humanPiece;
+    private BoardDirection boardDirection;
+
+    private boolean highlightLegalMoves;
 
     private final Color lightSquare = new Color(227,193,111);
     private final Color darkSquare = new Color(184, 139, 74);
@@ -46,8 +57,15 @@ public class Table {
         this.gameWindow.setJMenuBar(tableMenuBar);
         this.gameWindow.setSize(OUTER_FRAME_DIMENSION);
         this.chessBoard = Board.createStandardBoard();
+        this.gameHistory = new GameHistory();
+        this.takenPieces = new TakenPieces();
 
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
+        this.boardDirection = BoardDirection.NORMAL;
+        this.highlightLegalMoves = false;
+        this.gameWindow.add(takenPieces, BorderLayout.WEST);
+        this.gameWindow.add(gameHistory, BorderLayout.EAST);
         this.gameWindow.add(boardPanel, BorderLayout.CENTER);
 
         this.gameWindow.setVisible(true);
@@ -56,6 +74,7 @@ public class Table {
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(createPreferenceMenu());
         return tableMenuBar;
     }
 
@@ -70,6 +89,64 @@ public class Table {
         fileMenu.add(exitMenuItem);
 
         return fileMenu;
+    }
+
+    private JMenu createPreferenceMenu() {
+        final JMenu preferencesMenu = new JMenu("Preferences");
+        final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
+        flipBoardMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                boardDirection = boardDirection.opposite();
+                boardPanel.drawBoard(chessBoard);
+            }
+        });
+        preferencesMenu.add(flipBoardMenuItem);
+
+        preferencesMenu.addSeparator();
+
+        final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves",
+                false);
+
+        legalMoveHighlighterCheckbox.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                highlightLegalMoves = legalMoveHighlighterCheckbox.isSelected();
+            }
+        });
+
+        preferencesMenu.add(legalMoveHighlighterCheckbox);
+
+        return preferencesMenu;
+    }
+
+    public enum BoardDirection {
+        NORMAL {
+            @Override
+            List<SquarePanel> traverse(final List<SquarePanel> boardSquares) {
+                return boardSquares;
+            }
+
+            @Override
+            BoardDirection opposite() {
+                return FLIPPED;
+            }
+        },
+        FLIPPED {
+            @Override
+            List<SquarePanel> traverse(final List<SquarePanel> boardSquares) {
+                return Lists.reverse(boardSquares);
+            }
+
+            @Override
+            BoardDirection opposite() {
+                return NORMAL;
+            }
+        };
+
+        abstract List<SquarePanel> traverse(final List<SquarePanel> boardSquares);
+        abstract BoardDirection opposite();
     }
 
     // making the gui for the board
@@ -90,13 +167,49 @@ public class Table {
 
         public void drawBoard(final Board board) {
             removeAll();
-            for (final SquarePanel squarePanel : boardSquares) {
+            for (final SquarePanel squarePanel : boardDirection.traverse(boardSquares)) {
                 squarePanel.drawSquare(board);
                 add(squarePanel);
             }
             validate();
             repaint();
         }
+    }
+
+
+    // keeps track of the moves executed
+    public static class MoveLog {
+        private final List<Move> moves;
+
+        MoveLog() {
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves() {
+            return this.moves;
+        }
+
+        public void addMove(final Move move) {
+            this.moves.add(move);
+        }
+
+        public int size() {
+            return this.moves.size();
+        }
+
+        public void clear() {
+            this.moves.clear();
+        }
+
+        public Move removeMove(int index) {
+            return this.moves.remove(index);
+        }
+
+        public boolean removeMove(final Move move) {
+            return this.moves.remove(move);
+        }
+
+
     }
 
     // making the gui for the squares
@@ -129,7 +242,22 @@ public class Table {
                             final Move move = Move.MoveFactory.createMove(chessBoard, sourceSquare.getSquarePosition(),
                                     destinationSquare.getSquarePosition());
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
+                            if (transition.getMoveStatus().isDone()) {
+                                chessBoard = transition.getTransitionBoard();
+                                moveLog.addMove(move);
+                            }
+                            sourceSquare = null;
+                            destinationSquare = null;
+                            humanPiece = null;
                         }
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                gameHistory.redo(chessBoard, moveLog);
+                                takenPieces.redo(moveLog);
+                                boardPanel.drawBoard(chessBoard);
+                            }
+                        });
                     }
                 }
 
@@ -189,9 +317,35 @@ public class Table {
             }
         }
 
+        private void highlightLegals(final Board board) {
+            if (highlightLegalMoves) {
+                for (final Move move : pieceLegalMoves(board)) {
+                    MoveTransition transition = board.currentPlayer().makeMove(move);
+                    if(!transition.getMoveStatus().isDone()) {
+                        continue;
+                    }
+                    if (move.getDestinationPosition() == this.squareId) {
+                        try {
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/misc/green_dot.png")))));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+        private Collection<Move> pieceLegalMoves(final Board board) {
+            if (humanPiece != null && humanPiece.getPieceColor() == board.currentPlayer().getColor()) {
+                return humanPiece.findLegalMove(board);
+            }
+            return Collections.emptyList();
+        }
+
         public void drawSquare(final Board board) {
             setSquareColor();
             setChessPiece(board);
+            highlightLegals(board);
             validate();
             repaint();
         }

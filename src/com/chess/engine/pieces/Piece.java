@@ -7,20 +7,20 @@ import com.chess.engine.board.Move;
 import java.util.Collection;
 
 public abstract class Piece {
-    protected final int piecePosition;
-    protected final Color pieceColor;
+    final int piecePosition;
+    final Color pieceColor;
     protected final boolean isFirstMove;
     protected final PieceType pieceType;
     private final int cachedHashCode;
 
-    Piece(final PieceType pieceType, final int piecePosition, final Color pieceColor) {
+    Piece(final PieceType pieceType, final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
         this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceColor = pieceColor;
         // continue this later
         // using first move to check pawns
         // because first move could also be used to check for king castling
-        this.isFirstMove = false;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
 
@@ -75,9 +75,14 @@ public abstract class Piece {
         return this.pieceType;
     }
 
+    public int getPieceValue() {
+        return this.pieceType.getPieceValue();
+    }
+
 
     public enum PieceType {
-        BISHOP("B") {
+        // the pieces value are standard to chess, for chess programming we take the hundredth form
+        BISHOP("B", 300) {
             @Override
             public boolean isKing() {
                 return false;
@@ -88,7 +93,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        KING("K") {
+        KING("K", 10000) {
             @Override
             public boolean isKing() {
                 return true;
@@ -99,7 +104,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        KNIGHT("N") {
+        KNIGHT("N", 300) {
             @Override
             public boolean isKing() {
                 return false;
@@ -110,7 +115,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        PAWN("P") {
+        PAWN("P", 100) {
             @Override
             public boolean isKing() {
                 return false;
@@ -121,7 +126,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        QUEEN("Q") {
+        QUEEN("Q", 900) {
             @Override
             public boolean isKing() {
                 return false;
@@ -132,7 +137,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        ROOK("R") {
+        ROOK("R", 500) {
             @Override
             public boolean isKing() {
                 return false;
@@ -145,15 +150,21 @@ public abstract class Piece {
         };
 
 
-        private String pieceName;
+        private final String pieceName;
+        private final int pieceValue;
 
-        PieceType(final String pieceName) {
+        PieceType(final String pieceName, final int pieceValue) {
             this.pieceName = pieceName;
+            this.pieceValue = pieceValue;
         }
 
         @Override
         public String toString() {
             return this.pieceName;
+        }
+
+        public int getPieceValue() {
+            return this.pieceValue;
         }
 
         public abstract boolean isKing();

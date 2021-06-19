@@ -18,8 +18,13 @@ public class Queen extends Piece {
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -8, -7, -1, 1, 7, 8, 9};
 
     public Queen(final int piecePosition, final Color pieceColor) {
-        super(PieceType.QUEEN, piecePosition, pieceColor);
+        super(PieceType.QUEEN, piecePosition, pieceColor, true);
     }
+
+    public Queen(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+        super(PieceType.PAWN, piecePosition, pieceColor, isFirstMove);
+    }
+
 
     @Override
     public Collection<Move> findLegalMove(final Board board) {
@@ -53,11 +58,11 @@ public class Queen extends Piece {
 
                         // checking if the piece is capturing an enemy piece
                         if (this.pieceColor != pieceColor) {
-                            legalMoves.add(new CapturingMove(board, this, possibleDestinationPosition,
+                            legalMoves.add(new MajorCapturingMove(board, this, possibleDestinationPosition,
                                     pieceAtDestination));
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }
