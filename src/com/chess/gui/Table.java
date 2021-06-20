@@ -64,9 +64,9 @@ public class Table {
         this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameWindow.add(takenPieces, BorderLayout.WEST);
-        this.gameWindow.add(gameHistory, BorderLayout.EAST);
-        this.gameWindow.add(boardPanel, BorderLayout.CENTER);
+        this.gameWindow.add(this.takenPieces, BorderLayout.WEST);
+        this.gameWindow.add(this.gameHistory, BorderLayout.EAST);
+        this.gameWindow.add(this.boardPanel, BorderLayout.CENTER);
 
         this.gameWindow.setVisible(true);
     }
@@ -120,6 +120,7 @@ public class Table {
 
         return preferencesMenu;
     }
+
 
     public enum BoardDirection {
         NORMAL {

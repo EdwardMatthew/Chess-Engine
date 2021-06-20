@@ -51,7 +51,6 @@ public class WhitePlayer extends Player {
                     if (Player.findAttackOnSquare(61, opponentLegals).isEmpty() &&
                     Player.findAttackOnSquare(62, opponentLegals).isEmpty() &&
                     rookSquare.getPiece().getPieceType().isRook()) {
-                        // add king castle move later
                         kingCastles.add(new ShortCastleMove(this.board, this.playerKing, 62,
                                        (Rook)rookSquare.getPiece(), rookSquare.getSquarePosition(), 61));
                     }

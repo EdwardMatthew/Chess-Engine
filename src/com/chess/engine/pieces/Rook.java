@@ -32,13 +32,13 @@ public class Rook extends Piece {
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES) {
-            possibleDestinationPosition = this.piecePosition + possibleDestinationOffset;
+            possibleDestinationPosition = this.piecePosition;
 
             // same looping as with the bishop but with different offsets
             while (Utilities.isValidSquarePosition(possibleDestinationPosition)) {
                 // break the loop if algorithm breaks
-                if (firstColumn(this.piecePosition, possibleDestinationOffset) ||
-                    eightColumn(this.piecePosition, possibleDestinationOffset)) {
+                if (firstColumn(possibleDestinationPosition, possibleDestinationOffset) ||
+                    eightColumn(possibleDestinationPosition, possibleDestinationOffset)) {
                     break;
                 }
 
@@ -71,6 +71,7 @@ public class Rook extends Piece {
     public Rook movePiece(Move move) {
         return new Rook(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
     }
+
 
     @Override
     public String toString() {

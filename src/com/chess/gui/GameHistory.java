@@ -48,7 +48,7 @@ public class GameHistory extends JPanel {
             if (lastMove.getMovedPiece().getPieceColor().isWhite()) {
                 this.model.setValueAt(moveText + calculateCheckAndMateHash(board), currentRow, 0);
             } else if (lastMove.getMovedPiece().getPieceColor().isBlack()) {
-                this.model.setValueAt(moveText + calculateCheckAndMateHash(board), currentRow, 1);
+                this.model.setValueAt(moveText + calculateCheckAndMateHash(board), currentRow-1, 1);
             }
         }
 

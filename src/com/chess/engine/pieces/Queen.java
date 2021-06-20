@@ -32,15 +32,15 @@ public class Queen extends Piece {
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int possibleDestinationOffset : POSSIBLE_LEGAL_MOVES_DIRECTION) {
-            int possibleDestinationPosition = this.piecePosition + possibleDestinationOffset;
+            int possibleDestinationPosition = this.piecePosition;
 
-            // looping to move the bishop to one of the four possible diagonals
+            // looping to move the queen to one of the four possible diagonals
             // continue loop while tile is still valid
             // stop loop when tile is not valid anymore
             while (Utilities.isValidSquarePosition(possibleDestinationPosition)) {
                 // break the loop where the algorithm breaks
-                if (firstColumn(this.piecePosition, possibleDestinationOffset) ||
-                        eightColumn(this.piecePosition, possibleDestinationOffset)) {
+                if (firstColumn(possibleDestinationPosition, possibleDestinationOffset) ||
+                        eightColumn(possibleDestinationPosition, possibleDestinationOffset)) {
                     break;
                 }
 

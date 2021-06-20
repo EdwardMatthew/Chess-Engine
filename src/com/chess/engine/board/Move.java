@@ -3,7 +3,6 @@ package com.chess.engine.board;
 import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Rook;
-import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
 import static com.chess.engine.board.Board.*;
 
@@ -83,8 +82,7 @@ public abstract class Move {
 
     public Board execute() {
         // works by making a new board where the move is made
-        // not by mutating the word
-        // to be worked on later
+        // not by mutating the board
 
         final Builder builder = new Builder();
 
@@ -164,8 +162,21 @@ public abstract class Move {
 
         @Override
         public Board execute() {
-            // to be worked on later
-            return null;
+            final Builder builder = new Builder();
+            for (final Piece piece : this.board.currentPlayer().getActivePieces()) {
+                if (!this.movedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+                if (!piece.equals(this.getCapturedPiece())) {
+                    builder.setPiece(piece);
+                }
+            }
+
+            builder.setPiece(this.movedPiece.movePiece(this));
+            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getColor());
+            return builder.build();
         }
 
         @Override
@@ -294,7 +305,7 @@ public abstract class Move {
 
         @Override
         public String toString() {
-            return "";
+            return Utilities.getPositionAtCoordinate(this.destinationPosition) + "=" + "Q";
         }
 
     }
@@ -315,8 +326,8 @@ public abstract class Move {
             for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
                 builder.setPiece(piece);
             }
-            final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
-            builder.setPiece(movedPiece);
+            final Pawn movedPawn = (Pawn)this.movedPiece.movePiece(this);
+            builder.setPiece(movedPawn);
             builder.setEnPassantPawn(movedPawn); // set jump pawn to be the en passant pawn
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getColor());
             return builder.build();
@@ -364,7 +375,9 @@ public abstract class Move {
             }
             builder.setPiece(this.movedPiece.movePiece(this));
             // look into this later
-            builder.setPiece(new Rook(this.castleRook.getPiecePosition(), this.castleRook.getPieceColor()));
+            builder.setPiece(new Rook(this.castleRookDestination,
+                                      this.castleRook.getPieceColor(),
+                                      true));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getColor());
             return builder.build();
         }
@@ -406,6 +419,7 @@ public abstract class Move {
         public String toString() {
             return "0-0";
         }
+
     }
 
     public static final class LongCastleMove extends CastleMove {

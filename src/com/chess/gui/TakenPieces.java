@@ -42,8 +42,8 @@ public class TakenPieces extends JPanel {
     }
 
     public void redo(final MoveLog moveLog) {
-        southPanel.removeAll();
-        northPanel.removeAll();
+        this.southPanel.removeAll();
+        this.northPanel.removeAll();
 
         final List<Piece> whiteTakenPieces = new ArrayList<>();
         final List<Piece> blackTakenPieces = new ArrayList<>();
@@ -80,10 +80,10 @@ public class TakenPieces extends JPanel {
         // draw the pieces
         for (final Piece takenPiece : whiteTakenPieces) {
             try {
-                final BufferedImage image = ImageIO.read(new File("art/simple" +
-                        takenPiece.getPieceColor().toString().substring(0,1) + "" + takenPiece.toString()));
+                final BufferedImage image = ImageIO.read(new File("art/simple/"
+                + takenPiece.getPieceColor().toString().substring(0,1) + takenPiece.toString() + ".gif"));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(); // revisit this
+                final JLabel imageLabel = new JLabel();
                 this.southPanel.add(imageLabel);
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -92,8 +92,8 @@ public class TakenPieces extends JPanel {
 
         for (final Piece takenPiece : blackTakenPieces) {
             try {
-                final BufferedImage image = ImageIO.read(new File("art/simple" +
-                        takenPiece.getPieceColor().toString().substring(0,1) + "" + takenPiece.toString()));
+                final BufferedImage image = ImageIO.read(new File("art/simple/" +
+                        takenPiece.getPieceColor().toString().substring(0,1) + takenPiece.toString() + ".gif"));
                 final ImageIcon icon = new ImageIcon(image);
                 final JLabel imageLabel = new JLabel(); // revisit this
                 this.northPanel.add(imageLabel);
