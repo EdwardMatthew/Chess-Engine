@@ -30,7 +30,7 @@ public class TakenPieces extends JPanel {
 
     public TakenPieces() {
         super(new BorderLayout());
-        setBackground(Color.decode("0xFDF5B6"));
+        setBackground(Color.decode("#00ffff"));
         setBorder(PANEL_BORDER);
         this.northPanel = new JPanel(new GridLayout(8, 2));
         this.southPanel = new JPanel(new GridLayout(8, 2));
@@ -83,7 +83,7 @@ public class TakenPieces extends JPanel {
                 final BufferedImage image = ImageIO.read(new File("art/simple/"
                 + takenPiece.getPieceColor().toString().substring(0,1) + takenPiece.toString() + ".gif"));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(icon);
                 this.southPanel.add(imageLabel);
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -95,7 +95,7 @@ public class TakenPieces extends JPanel {
                 final BufferedImage image = ImageIO.read(new File("art/simple/" +
                         takenPiece.getPieceColor().toString().substring(0,1) + takenPiece.toString() + ".gif"));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(); // revisit this
+                final JLabel imageLabel = new JLabel(icon);
                 this.northPanel.add(imageLabel);
             } catch (final IOException e) {
                 e.printStackTrace();
