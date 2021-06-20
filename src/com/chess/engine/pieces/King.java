@@ -16,13 +16,38 @@ import static com.chess.engine.board.Move.*;
 public class King extends Piece {
 
     private static final int[] POSSIBLE_LEGAL_MOVES_DIRECTION = {-9, -8, -7, -1, 1, 7, 8, 9};
+    private final boolean isCastled;
+    private final boolean canShortCastle;
+    private final boolean canLongCastle;
 
-    public King(final int piecePosition, final Color pieceColor) {
+
+    public King(final int piecePosition, final Color pieceColor,
+                final boolean canShortCastle, final boolean canLongCastle) {
         super(PieceType.KING, piecePosition, pieceColor, true);
+        this.isCastled = false;
+        this.canShortCastle = canShortCastle;
+        this.canLongCastle = canLongCastle;
     }
 
-    public King(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
+    public King(final int piecePosition, final Color pieceColor, final boolean isCastled,
+                final boolean canShortCastle, final boolean canLongCastle,
+                final boolean isFirstMove) {
         super(PieceType.KING, piecePosition, pieceColor, isFirstMove);
+        this.isCastled = isCastled;
+        this.canShortCastle = canShortCastle;
+        this.canLongCastle = canLongCastle;
+    }
+
+    public boolean isCastled() {
+        return this.isCastled;
+    }
+
+    public boolean isCanShortCastle() {
+        return this.canShortCastle;
+    }
+
+    public boolean isCanLongCastle() {
+        return this.canLongCastle;
     }
 
     @Override
@@ -63,12 +88,33 @@ public class King extends Piece {
 
     @Override
     public King movePiece(Move move) {
-        return new King(move.getDestinationPosition(), move.getMovedPiece().getPieceColor());
+        return new King(move.getDestinationPosition(), move.getMovedPiece().getPieceColor(),
+                false, move.isCastlingMove(), false, false);
     }
 
     @Override
     public String toString() {
         return pieceType.toString();
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof King)) {
+            return false;
+        }
+        if (!super.equals(other)) {
+            return false;
+        }
+        final King king = (King) other;
+        return isCastled == king.isCastled;
+    }
+
+    @Override
+    public int hashCode() {
+        return (31 * super.hashCode() + (isCastled ? 1 : 0));
     }
 
     private static boolean firstColumn(final int currentPosition, final int possibleOffset) {

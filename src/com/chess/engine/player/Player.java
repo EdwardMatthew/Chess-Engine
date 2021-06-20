@@ -76,7 +76,15 @@ public abstract class Player {
 
     // checking if player has castled or not
     public boolean isCastled() {
-        return false;
+        return this.playerKing.isCastled();
+    }
+
+    public boolean isCanShortCastle() {
+        return this.playerKing.isCanShortCastle();
+    }
+
+    public boolean isCanLongCastle() {
+        return this.playerKing.isCanLongCastle();
     }
 
     public MoveTransition makeMove(final Move move) {
