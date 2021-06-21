@@ -22,7 +22,7 @@ public class Queen extends Piece {
     }
 
     public Queen(final int piecePosition, final Color pieceColor, final boolean isFirstMove) {
-        super(PieceType.PAWN, piecePosition, pieceColor, isFirstMove);
+        super(PieceType.QUEEN, piecePosition, pieceColor, isFirstMove);
     }
 
 

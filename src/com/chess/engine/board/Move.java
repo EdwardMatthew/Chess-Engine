@@ -114,7 +114,8 @@ public abstract class Move {
 
         @Override
         public String toString() {
-            return movedPiece.getPieceType() + Utilities.getPositionAtCoordinate(this.destinationPosition);
+            return Utilities.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0, 1) + "x" +
+                    Utilities.getPositionAtCoordinate(this.destinationPosition);
         }
     }
 
@@ -374,7 +375,6 @@ public abstract class Move {
                 builder.setPiece(piece);
             }
             builder.setPiece(this.movedPiece.movePiece(this));
-            // look into this later
             builder.setPiece(new Rook(this.castleRookDestination,
                                       this.castleRook.getPieceColor(),
                                       true));
